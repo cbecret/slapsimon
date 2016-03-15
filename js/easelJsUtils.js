@@ -1,6 +1,6 @@
 (function(){
 
-    var Graphics = createjs.Graphics;
+	var Graphics = createjs.Graphics;
 	var Shape = createjs.Shape;
 
 	// Constructeur EaselJsUtils
