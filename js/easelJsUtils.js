@@ -47,10 +47,30 @@
 			return this.createBitmap("./img/une_licorne.png", x, y, options);
 		},
 
-		// 
-		showForce: function(u, v, x, y, force) {
+		// Création de la barre de combo
+		showForce: function(x, y, w, h, force) {
+			this.stage.removeChild(shape);
+			var graphic = new Graphics();
+			var opacity = 1;
+			graphic.beginFill("#ff00ff");
+			// Ajout de la force sur la barre
+			wForced = w * (force / 500);
+			graphic.drawRect(x, y, wForced, h);
+			var shape = new Shape(graphic);
+			this.stage.addChild(shape);
+			return shape;
+		},
 
-			return this.createBitmap("./, ")
+		// Création du background de la barre de combo
+		showBackground: function(x, y, w, h) {
+			this.stage.removeChild(shape);
+			var graphic = new Graphics();
+			var opacity = 1;
+			graphic.beginFill("#000000");
+			graphic.drawRect(x, y, w, h);
+			var shape = new Shape(graphic);
+			this.stage.addChild(shape);
+			return shape;
 		},
 
 

@@ -41,9 +41,11 @@
 
 			console.log("CLICK DOWN en X : " + this.stage.downX + ", " + " , CLICK DOWN en Y : " + this.stage.downY);
 			console.log("CLICK UP en X : " + this.stage.upX + " , CLICK UP en Y : " + this.stage.upY);
-			var force = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
-			console.log("Voilà la foooooorce : " + force);
-			console.log("Verification de la force :" + easelJsUtils.pythagore(900, 1200));
+			var slap = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
+			// Enregistrement de la slap
+			// Gestion de la force de la slap
+			simon.force += (slap / 20);
+			console.log("Voilà la foooooorce : " + simon.force);
 		});
 
 
@@ -78,12 +80,30 @@
 
 	};
 
+	// Ajout du background de la barre de combo
+	this.addBground = function() {
+		var background = easelJsUtils.showBackground(280,830,640,70);
+	}
+
+
+	// Ajout de la barre de combo
+	this.addForce = function() {
+		var barre = easelJsUtils.showForce(300,850,600,30,simon.force);
+	}
 
 	// Permet de rafraichir le rendu en fonction du fps défini
 	this.startTicker = function(fps) {
 		createjs.Ticker.setFPS(fps);
 		createjs.Ticker.addEventListener("tick", function() {
 			this.stage.update();
+			if (simon.force > 0 ) {
+				simon.force -=1;
+			} else {
+				simon.force = 0;
+			}
+			addBground();
+			addForce();
+			console.log(simon.force);
 		});
 	};
 
