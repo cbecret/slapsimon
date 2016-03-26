@@ -2,7 +2,10 @@
 
 	var simon = {
 		simonX: 440,
-		simonY: 230
+		simonY: 230,
+		force:420,
+		gameOver:0,
+		highScore:0
 	};
 
 
@@ -17,7 +20,9 @@
 		prepareStage();
 		addTitre();
 		addBitmaps(); // ajoute les images
-		startTicker(30); // défini les fps
+		addJauge();
+		addCombo();
+		startTicker(20); // défini les fps
 	};
 
 
@@ -44,8 +49,13 @@
 			var slap = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
 			// Enregistrement de la slap
 			// Gestion de la force de la slap
-			simon.force += (slap / 20);
-			console.log("Voilà la foooooorce : " + simon.force);
+			simon.force -= Math.round((slap / 20));
+
+			// Repasser la barre de combo au dessus de son cache noir.
+			// Celui-ci reprendra le dessus au prochain tick
+			addCombo();
+			simon.highScore += slap;
+			console.log("Mise à jour du High Score !! Nouveau Highscore : " + simon.highScore);
 		});
 
 
@@ -80,31 +90,43 @@
 
 	};
 
-	// Ajout du background de la barre de combo
-	this.addBground = function() {
-		var background = easelJsUtils.showBackground(280,830,640,70);
-	}
-
-
 	// Ajout de la barre de combo
-	this.addForce = function() {
-		var barre = easelJsUtils.showForce(300,850,600,30,simon.force);
+	this.addJauge = function() {
+		var jauge = easelJsUtils.createJauge(820-simon.force,850,simon.force,50);
+	};
+
+	this.addCombo = function() {
+		var combo = easelJsUtils.afficherCombo(400, 850, {scale: [2,2]});
 	}
+
 
 	// Permet de rafraichir le rendu en fonction du fps défini
 	this.startTicker = function(fps) {
 		createjs.Ticker.setFPS(fps);
-		createjs.Ticker.addEventListener("tick", function() {
-			this.stage.update();
-			if (simon.force > 0 ) {
-				simon.force -=1;
-			} else {
-				simon.force = 0;
-			}
-			addBground();
-			addForce();
-			console.log(simon.force);
-		});
+		createjs.Ticker.addEventListener("tick", handleTick);
 	};
+
+		// Mise à jour du jeu à chaque ticks
+	this.handleTick = function(event) {
+			if (simon.force < 0) {
+				simon.force = 0;
+			} else if (simon.force > 420) {
+				simon.force = 420;
+				simon.gameOver += 1;
+				console.log("Attention ca va faire GAME OVER : " + simon.gameOver);
+			} else {
+				simon.force +=2;
+			}
+			if (simon.gameOver > 30) {
+				alert("GAME OVER !!!!");
+			}
+			addJauge();
+			this.stage.update(event);
+	};
+
+
+
+	
+
 
 }());

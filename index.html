@@ -1,149 +1,31 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0, user-scalable=no"/>
   <title>Slap Simon</title>
 
   <!-- CSS  -->
-  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
   <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
 </head>
+
+
 <body onload="init();">
-  <nav class="white" role="navigation">
-    <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo">Slap Simon</a>
-      <ul class="right hide-on-med-and-down">
-        <li><a href="#canvas">Accéder au jeu</a></li>
-      </ul>
 
-      <ul id="nav-mobile" class="side-nav">
-        <li><a href="#canvas">Accéder au jeu</a></li>
-      </ul>
-      <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
-    </div>
-  </nav>
-
-  <div id="index-banner" class="parallax-container">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <br><br>
-        <h1 class="header center teal-text">Préparez-vous à vivre des émotions intenses !!</h1>
-        <div class="row center">
-          <h5 class="header col s12 light">Insérer le Synopsys du jeu</h5>
-        </div>
-        <div class="row center">
-          <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light teal lighten-1">JOUER !</a>
-        </div>
-        <br><br>
-
-      </div>
-    </div>
-    <div class="parallax"><img src="./img/background1.jpg" alt="Unsplashed background img 1"></div>
-  </div>
-
-    <div class="container">
+  <div class="container">
     <div class="section">
+
       <!--   Section JEU   -->
-      <div class="row">
-        <div class="col s12 l12">
-        <p class="center-align">Insérer le contenu du JEU ici</p>
-        <div id="canvas" class="Canvas">
-          <canvas width="1200" height="900" id="Canvas"></canvas>
-        </div>
-        </div>
+      <div id="canvas" class="Canvas">
+        <canvas width="1200" height="900" id="Canvas"></canvas>
       </div>
     </div>
   </div>
-
-
-  <div class="container">
-    <div class="section">
-
-      <!--   Icon Section   -->
-      <div class="row">
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">flash_on</i></h2>
-            <h5 class="center">Des armes pour frapper toujours plus fort !</h5>
-
-            <p class="light">Insérer ici le contenu du gameplay et expliciter chaque partie</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">group</i></h2>
-            <h5 class="center">Frapper dans divers mondes</h5>
-
-            <p class="light">Insérer ici le contenu du gameplay et expliciter chaque partie</p>
-          </div>
-        </div>
-
-        <div class="col s12 m4">
-          <div class="icon-block">
-            <h2 class="center brown-text"><i class="material-icons">settings</i></h2>
-            <h5 class="center">Une Fatality</h5>
-
-            <p class="light">Insérer ici le contenu du gameplay et expliciter chaque partie</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <div class="parallax-container valign-wrapper">
-    <div class="section no-pad-bot">
-      <div class="container">
-        <div class="row center">
-          <h5 class="header col s12 light">Un jeu avec un gros contenu et régulièrement mis à jour pour toujours plus d'expériences</h5>
-        </div>
-      </div>
-    </div>
-    <div class="parallax"><img src="./img/background2.jpg" alt="Unsplashed background img 2"></div>
-  </div>
-  
-  
-  <div class="container">
-    <div class="section">
-
-      <div class="row">
-        <div class="col s12 l12 center">
-          <h3><i class="mdi-content-send brown-text"></i></h3>
-          <h4>Contactez nous</h4>
-          <p class="center-align light">Loris DUCAMPS : Chef Communication / Yoann Herlaut : Chef Trésorier / Cyril BECRET : Chef Technique / William NISOLE : Chef Design et Colin DUPRE : bahh jsais plus</p>
-        </div>
-      </div>
-
-    </div>
-  </div>
-
-
-  <footer class="page-footer teal">
-    <div class="container">
-      <div class="row">
-        <div class="col l12 s12">
-          <h5 class="white-text center-align">Slap Simon</h5>
-          <p class="grey-text text-lighten-4">Nous sommes un groupe d'étudiants HETICIEN qui travaillons sur ce merveilleux projet, c'est notre passe-temps. N'importe qui qui souhaite nous aider au developpement de ce projet sera une aide appréciable</p>
-
-        </div>
-      </div>
-    </div>
-    <div class="footer-copyright">
-      <div class="container">
-      Crée par <a class="brown-text text-lighten-3" href="http://materializecss.com">Loris DUCAMPS</a>
-      </div>
-    </div>
-  </footer>
 
 
   <!--  Scripts-->
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
-  <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
   <script src="./libs/easeljs-0.8.2.combined.js"></script>
+  <script src="./libs/tween.js"></script>
   <script src="./js/easelJsUtils.js"></script>
   <script src="./js/gip.js"></script>
 
