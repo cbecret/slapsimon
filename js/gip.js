@@ -5,7 +5,8 @@
 		simonY: 230,
 		force:420,
 		gameOver:0,
-		highScore:0
+		highScore:0,
+		level:1
 	};
 
 
@@ -44,8 +45,8 @@
 			this.stage.upX = evt.stageX;
 			this.stage.upY = evt.stageY;
 
-			console.log("CLICK DOWN en X : " + this.stage.downX + ", " + " , CLICK DOWN en Y : " + this.stage.downY);
-			console.log("CLICK UP en X : " + this.stage.upX + " , CLICK UP en Y : " + this.stage.upY);
+			// console.log("CLICK DOWN en X : " + this.stage.downX + ", " + " , CLICK DOWN en Y : " + this.stage.downY);
+			// console.log("CLICK UP en X : " + this.stage.upX + " , CLICK UP en Y : " + this.stage.upY);
 			var slap = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
 			// Enregistrement de la slap
 			// Gestion de la force de la slap
@@ -54,8 +55,8 @@
 			// Repasser la barre de combo au dessus de son cache noir.
 			// Celui-ci reprendra le dessus au prochain tick
 			addCombo();
-			simon.highScore += slap;
-			console.log("Mise à jour du High Score !! Nouveau Highscore : " + simon.highScore);
+			simon.highScore += (slap * simon.level);
+			console.log("Mise à jour du High Score !! Nouveau Highscore : " + Math.round(simon.highScore));
 		});
 
 
@@ -109,16 +110,21 @@
 		// Mise à jour du jeu à chaque ticks
 	this.handleTick = function(event) {
 			if (simon.force < 0) {
-				simon.force = 0;
+				simon.level ++;
+				console.log("LEVEL UP :::::: " + simon.level);
+				simon.force = 420;
 			} else if (simon.force > 420) {
 				simon.force = 420;
 				simon.gameOver += 1;
-				console.log("Attention ca va faire GAME OVER : " + simon.gameOver);
+				if (simon.gameOver % 40 === 0) {
+					console.log("Attention ...");
+				}
 			} else {
 				simon.force +=2;
 			}
-			if (simon.gameOver > 30) {
-				alert("GAME OVER !!!!");
+
+			if (simon.gameOver > 140) {
+				alert("!!!!! GAME OVER !!!!");
 			}
 			addJauge();
 			this.stage.update(event);
