@@ -50,13 +50,13 @@
 			var slap = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
 			// Enregistrement de la slap
 			// Gestion de la force de la slap
-			simon.force -= Math.round((slap / 20));
+			simon.force -= Math.round((slap / 20) / (simon.level * 2));
 
-			// Repasser la barre de combo au dessus de son cache noir.
+			// Repasser la barre colorée au dessus de son cache noir.
 			// Celui-ci reprendra le dessus au prochain tick
 			addCombo();
-			simon.highScore += (slap * simon.level);
-			console.log("Mise à jour du High Score !! Nouveau Highscore : " + Math.round(simon.highScore));
+			simon.highScore += ((slap * simon.level)/100);
+			// console.log("Nouveau Highscore : " + Math.round(simon.highScore));
 		});
 
 
@@ -76,13 +76,27 @@
 	// Ajout des images	     
 	this.addBitmaps = function() {
 		// Créer le monde des licornes
-		var unicornWorld = easelJsUtils.unicornWorld(0, 0, {
-			scale: [0.8, 0.9]
-		});
-
-		var uniBody = easelJsUtils.unicornBody(450, 50, {
-			scale: [2, 2]
-		});
+		if (simon.level % 2 == 1) {
+			var unicornWorld = easelJsUtils.unicornWorld(0, 0, {
+				scale: [0.8, 0.9]
+			});
+		}
+		
+		if (simon.level % 2 == 0) {
+		var matrixWorld = easelJsUtils.matrixWorld(0, 0, {
+			scale: [1.5, 2]
+			});
+		}
+		if (simon.level % 2 == 1) {
+			var uniBody = easelJsUtils.unicornBody(450, 50, {
+				scale: [2, 2]
+			});
+		}
+		if (simon.level % 2 == 0) {
+			var neoBody = easelJsUtils.neoBody(270, 350, {
+				scale: [1.2, 1.2]
+			});
+		}
 
 		// Créé la tête de Simon
 		var simonHead = easelJsUtils.createSimon(simon.simonX, simon.simonY, {
@@ -113,9 +127,10 @@
 				simon.level ++;
 				console.log("LEVEL UP :::::: " + simon.level);
 				simon.force = 420;
+				return init();
 			} else if (simon.force > 420) {
 				simon.force = 420;
-				simon.gameOver += 1;
+				simon.gameOver += 4;
 				if (simon.gameOver % 40 === 0) {
 					console.log("Attention ...");
 				}
@@ -124,8 +139,13 @@
 			}
 
 			if (simon.gameOver > 140) {
-				alert("!!!!! GAME OVER !!!!");
+				console.log("Le score obtenu est de : " + simon.highScore);
+				console.log("Dernier level atteint : " + simon.level);
+				simon.highScore = 0;
+				simon.level = 0;
+				simon.gameOver = 0;
 			}
+
 			addJauge();
 			this.stage.update(event);
 	};

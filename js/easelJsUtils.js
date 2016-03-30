@@ -54,17 +54,24 @@
 			return this.createBitmap("./img/une_licorne.png", x, y, options);
 		},
 
-		pythagore: function(x, y) {
+		// Corps de Néo
+		neoBody: function(x, y, options) {
 
-			return Math.sqrt((x * x) + (y * y));
+			return this.createBitmap("./img/neo.png", x, y, options);
 		},
 
-		calcDeplacement: function(lastX, lastY, mouseX, mouseY)	{
-			var slapX = lastX - mouseX;
-			var slapY = lastY - mouseY;
-			var deplacement = this.pythagore(slapX, slapY);
+		// Background de Matrix
+		matrixWorld: function(x, y, options) {
 
-			return deplacement;
+			return this.createBitmap("./img/matrix.png", x, y, options);
+		},
+
+		// Calcul de la distance entre les positions de click enfoncé et click relaché
+		calcDeplacement: function(lastX, lastY, mouseX, mouseY)	{
+			var x = lastX - mouseX;
+			var y = lastY - mouseY;
+
+			return Math.sqrt((x * x) + (y * y));
 		},
 
 		// Création d'un titre (ou texte si besoin)
