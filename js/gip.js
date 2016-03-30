@@ -136,8 +136,8 @@
 
 		// Bob World
 		if (simon.level % 4 == 0) {
-			var aquaWorld = easelJsUtils.aquaWorld(0, 0, {
-				scale: [1.2, 1.2]
+			var aquaWorld = easelJsUtils.aquaWorld(-380, -50, {
+				scale: [1.5, 1.5]
 			});
 		}
 		if (simon.level % 4 == 0) {
