@@ -66,6 +66,41 @@
 			return this.createBitmap("./img/matrix.png", x, y, options);
 		},
 
+		// Corps de demon
+		demonBody: function(x, y, options) {
+
+			return this.createBitmap("./img/demon.png", x, y, options);
+		},
+
+		// Background de l'enfer
+		hellWorld: function(x, y, options) {
+
+			return this.createBitmap("./img/hell.png", x, y, options);
+		},
+
+		// Corps de bob
+		bobBody: function(x, y, options) {
+
+			return this.createBitmap("./img/bob.png", x, y, options);
+		},
+
+		// Background aquatique
+		aquaWorld: function(x, y, options) {
+
+			return this.createBitmap("./img/aquaWorld.png", x, y, options);
+		},
+
+		// Ecran de Game Over
+		gameOver: function(x, y, options) {
+
+			return this.createBitmap("./img/GameOver.png", x, y, options);
+		},
+
+		bgScore: function(x, y, options) {
+
+			return this.createBitmap("./img/bg-score.png", x, y, options);
+		},
+
 		// Calcul de la distance entre les positions de click enfoncé et click relaché
 		calcDeplacement: function(lastX, lastY, mouseX, mouseY)	{
 			var x = lastX - mouseX;
@@ -74,31 +109,31 @@
 			return Math.sqrt((x * x) + (y * y));
 		},
 
-		// Création d'un titre (ou texte si besoin)
-		createTitre: function(text, font, x, y, options) {
+		// Création d'un text
+		createText: function(text, font, x, y, options) {
 
 			// Options du texte
-			var titre = new createjs.Text();
-			titre.font = font;
-			titre.text = text;
-			titre.x = x;
-			titre.y = y;
+			var txt = new createjs.Text();
+			txt.font = font;
+			txt.text = text;
+			txt.x = x;
+			txt.y = y;
 			// Appliquer les options
 			if (options) {
 				if (options.color) {
-					titre.color = options.color;
+					txt.color = options.color;
 				}
 				if (options.textAlign) {
-					titre.textAlign = options.textAlign;
+					txt.textAlign = options.textAlign;
 				}
 				if (options.cursor) {
-					titre.cursor = options.cursor;
+					txt.cursor = options.cursor;
 				}
 			}
 			// Ajouter le Tesxt au Stage et le retourner
-			this.stage.addChild(titre);
+			this.stage.addChild(txt);
 
-			return titre;
+			return txt;
 		},
 
 		// Création du rectangle servant à masquer la barre de combo

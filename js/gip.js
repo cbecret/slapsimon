@@ -6,7 +6,8 @@
 		force:420,
 		gameOver:0,
 		highScore:0,
-		level:1
+		level:1,
+		slapCount:0
 	};
 
 
@@ -19,8 +20,8 @@
 	this.init = function() {
 		// Initialisation du niveau
 		prepareStage();
-		addTitre();
 		addBitmaps(); // ajoute les images
+		addText();
 		addJauge();
 		addCombo();
 		startTicker(20); // défini les fps
@@ -37,6 +38,7 @@
 			this.stage.downX = evt.stageX;
 			// Récupérer la position du curseur
 			this.stage.downY = evt.stageY;
+			simon.slapCount++;
 		});
 
 		this.stage.on("stagemouseup", function(evt) {
@@ -55,7 +57,8 @@
 			// Repasser la barre colorée au dessus de son cache noir.
 			// Celui-ci reprendra le dessus au prochain tick
 			addCombo();
-			simon.highScore += ((slap * simon.level)/100);
+			simon.highScore += Math.round((slap * simon.level)/100);
+			addText();
 			// console.log("Nouveau Highscore : " + Math.round(simon.highScore));
 		});
 
@@ -65,36 +68,81 @@
 	};
 
 
-	this.addTitre = function() {
-		var titre = easelJsUtils.createTitre("Slap Simon !!", "100px Impact", 600, 20, {
-			color: '#FF2020',
+	this.addText = function() {
+
+		// Display du level
+		var displayLevel = easelJsUtils.createText("#" + simon.level, "100px Impact", 1100, 20, {
+			color: '#000000',
 			textAlign: 'center'
 		});
+
+		// Fond du HighScore
+		var bgScore = easelJsUtils.bgScore(70, 8, {
+			scale: [0.6, 0.5]
+		});
+
+		// Display du HighScore
+		var displayLevel = easelJsUtils.createText("SCORE : " + simon.highScore, "25px Impact", 100, 20, {
+			color: '#e3ef6f',
+			textAlign: 'left'
+		});
+		// Display du nombre de slaps
+		var slapCount = easelJsUtils.createText("Slap count : " + simon.slapCount, "18px Impact", 250, 45, {
+			color: '#00ff00',
+			textAlign: 'right'
+		});
+
 	};
 
 
 	// Ajout des images	     
 	this.addBitmaps = function() {
-		// Créer le monde des licornes
-		if (simon.level % 2 == 1) {
+		
+		// Unicorn World
+		if (simon.level % 4 == 1) {
 			var unicornWorld = easelJsUtils.unicornWorld(0, 0, {
 				scale: [0.8, 0.9]
 			});
 		}
-		
-		if (simon.level % 2 == 0) {
-		var matrixWorld = easelJsUtils.matrixWorld(0, 0, {
-			scale: [1.5, 2]
-			});
-		}
-		if (simon.level % 2 == 1) {
+		if (simon.level % 4 == 1) {
 			var uniBody = easelJsUtils.unicornBody(450, 50, {
 				scale: [2, 2]
 			});
 		}
-		if (simon.level % 2 == 0) {
+
+		// Matrix World
+		if (simon.level % 4 == 2) {
+		var matrixWorld = easelJsUtils.matrixWorld(0, 0, {
+			scale: [1.5, 2]
+			});
+		}
+		if (simon.level % 4 == 2) {
 			var neoBody = easelJsUtils.neoBody(270, 350, {
 				scale: [1.2, 1.2]
+			});
+		}
+
+		// Hell World
+		if (simon.level % 4 == 3) {
+			var hellWorld = easelJsUtils.hellWorld(0, 0, {
+				scale: [3.1, 3.6]
+			});
+		}
+		if (simon.level % 4 == 3) {
+			var demonBody = easelJsUtils.demonBody(20, 220, {
+				scale: [1.1, 1.2]
+			});
+		}
+
+		// Bob World
+		if (simon.level % 4 == 0) {
+			var aquaWorld = easelJsUtils.aquaWorld(0, 0, {
+				scale: [1.2, 1.2]
+			});
+		}
+		if (simon.level % 4 == 0) {
+			var bobBody = easelJsUtils.bobBody(260, 200, {
+				scale: [1.8, 1.8]
 			});
 		}
 
@@ -103,6 +151,12 @@
 			scale: [0.5, 0.5]
 		});
 
+		// Ecran de Game Over
+		if (simon.level == 0) {
+			var gameOver = easelJsUtils.gameOver(0, 0, {
+				scale: [0.9, 1.2]
+			});
+		}
 	};
 
 	// Ajout de la barre de combo
@@ -140,10 +194,11 @@
 
 			if (simon.gameOver > 140) {
 				console.log("Le score obtenu est de : " + simon.highScore);
-				console.log("Dernier level atteint : " + simon.level);
 				simon.highScore = 0;
 				simon.level = 0;
 				simon.gameOver = 0;
+				addBitmaps();
+				addText();
 			}
 
 			addJauge();
