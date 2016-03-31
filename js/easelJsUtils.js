@@ -40,6 +40,29 @@
 
 			return this.createBitmap("./img/simon.png", x, y, options);
 		},
+				// Création d'une tête de Simon Casse 1
+		createSimonU: function(x, y, options) {
+
+			return this.createBitmap("./img/simonCasseU.png", x, y, options);
+		},
+
+				// Création d'une tête de Simon Casse 2
+		createSimonD: function(x, y, options) {
+
+			return this.createBitmap("./img/simonCasseD.png", x, y, options);
+		},
+
+				// Création d'une tête de Simon Casse 3
+		createSimonT: function(x, y, options) {
+
+			return this.createBitmap("./img/simonCasseT.png", x, y, options);
+		},
+
+				// Création d'une tête de Simon Casse 4
+		createSimonQ: function(x, y, options) {
+
+			return this.createBitmap("./img/simonCasseQ.png", x, y, options);
+		},
 
 		// Création d'un décor de licornes
 		unicornWorld: function(x, y, options)

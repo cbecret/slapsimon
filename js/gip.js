@@ -1,102 +1,165 @@
 (function() {
 
-	var simon = {
+
+	// Paramètres de jeu initiaux
+	var simon =
+	{
 		simonX: 440,
 		simonY: 230,
-		force:420,
+		pvMax: 500,
+		force:500,
 		gameOver:0,
+		score:0,
 		highScore:0,
 		level:1,
-		slapCount:0
+		slapCount:0,
+		tactile:0
 	};
 
 
-	// Initialisation du jeu
-	$(document).ready(function() {
+	// Initialisation du jeu au chargement
+	$(document).ready(function() {		
+		simon.canvas = $('#Canvas').get(0);
 		init();
+		// Raccourcis sur le Canvas html
 	});
 
 
-	this.init = function() {
-		// Initialisation du niveau
+	// Initialisation du jeu
+	this.init = function()
+	{
 		prepareStage();
-		addBitmaps(); // ajoute les images
+		addBitmaps();
 		addText();
 		addJauge();
 		addCombo();
-		startTicker(20); // défini les fps
+		addSimon();
+		// [DEFINIR LES FPS]
+		if (simon.tactile == 0) {
+			startTicker(30);
+		}			
 	};
 
 
-
 	// Préparer le stage et instancie EaselJsUtils
-	this.prepareStage = function() {
-		this.canvas = $('#Canvas').get(0);
-		this.stage = new createjs.Stage(this.canvas);
+	this.prepareStage = function()
+	{
 
+		// Clear de la stage
+		if (this.stage)	{
+			this.stage.clear();
+		}
+
+		// Creation de la stage
+		this.stage = new createjs.Stage(simon.canvas);
+
+		// Click enfoncé
 		this.stage.on("stagemousedown", function(evt) {
+			// Récupérer la position du curseur DOWN
 			this.stage.downX = evt.stageX;
-			// Récupérer la position du curseur
 			this.stage.downY = evt.stageY;
-			simon.slapCount++;
+
+
+			simon.simonX -=((this.stage.downX - 600) / 100);
+			simon.simonY -=((this.stage.downY - 450) / 100);
+			if (simon.force < 200) {
+				addSimonCasseD();
+			} else {
+				addSimon();
+			}
+
 		});
 
+		// Click relaché
 		this.stage.on("stagemouseup", function(evt) {
 
-			// Récupérer la position du curseur
+			// Récupérer la position du curseur UP
 			this.stage.upX = evt.stageX;
 			this.stage.upY = evt.stageY;
 
-			// console.log("CLICK DOWN en X : " + this.stage.downX + ", " + " , CLICK DOWN en Y : " + this.stage.downY);
-			// console.log("CLICK UP en X : " + this.stage.upX + " , CLICK UP en Y : " + this.stage.upY);
+			// Enregistrement de la valeur de la slap
 			var slap = easelJsUtils.calcDeplacement(this.stage.upX, this.stage.upY, this.stage.downX, this.stage.downY);
-			// Enregistrement de la slap
-			// Gestion de la force de la slap
-			simon.force -= Math.round((slap / 20) / (simon.level * 2));
+
+			// Gestion de la difficulté par niveau
+			simon.force -= Math.round((slap / 20) / (simon.level * 1.5));
 
 			// Repasser la barre colorée au dessus de son cache noir.
 			// Celui-ci reprendra le dessus au prochain tick
 			addCombo();
-			simon.highScore += Math.round((slap * simon.level)/100);
+
+			// Score actuel
+			simon.score += Math.round((slap * simon.level*2)/500);
+
+			if (simon.score > simon.highScore) {
+				// Enregistrement du HighScore si atteint
+				simon.highScore = simon.score;
+				console.log(":::: NEW HIGHSCORE ::::");
+			}
+
+			// Incrément du nombre de slap
+			simon.slapCount = simon.slapCount +0.5
+
+			// Mise à jour des texts
 			addText();
-			// console.log("Nouveau Highscore : " + Math.round(simon.highScore));
+
+			simon.simonX +=((this.stage.downX - 600) / 100);
+			simon.simonY +=((this.stage.downY - 450) / 100);
+			addSimon();
+			
 		});
 
-
-		this.stage.enableMouseOver(30); // Activer la gestion des évenements souris
+		// Activer la gestion des évenements souris
+		this.stage.enableMouseOver(30);
+		// Instance des outils de EaselJsUtils
 		easelJsUtils = new EaselJsUtils(this.stage);
+
 	};
 
 
-	this.addText = function() {
+	// Ajout des texts
+	this.addText = function()
+	{
 
-		// Display du level
-		var displayLevel = easelJsUtils.createText("#" + simon.level, "100px Impact", 1100, 20, {
+		// Background des texts de stats
+		this.stage.removeChild(simon.bgScore);
+		simon.bgScore = easelJsUtils.bgScore(70, 0, {
+			scale: [0.6, 0.8]
+		});
+
+		// Affichage du niveau
+		this.stage.removeChild(simon.displayLevel);
+		simon.displayLevel = easelJsUtils.createText("#" + simon.level, "100px Impact", 1100, 20, {
 			color: '#000000',
 			textAlign: 'center'
 		});
 
-		// Fond du HighScore
-		var bgScore = easelJsUtils.bgScore(70, 8, {
-			scale: [0.6, 0.5]
-		});
-
-		// Display du HighScore
-		var displayLevel = easelJsUtils.createText("SCORE : " + simon.highScore, "25px Impact", 100, 20, {
+		// Affichage du Score
+		this.stage.removeChild(simon.displayScore);
+		simon.displayScore = easelJsUtils.createText("SCORE : " + simon.score, "25px Impact", 100, 20, {
 			color: '#e3ef6f',
 			textAlign: 'left'
 		});
-		// Display du nombre de slaps
-		var slapCount = easelJsUtils.createText("Slap count : " + simon.slapCount, "18px Impact", 250, 45, {
+
+		// Affichage du High Score
+		this.stage.removeChild(simon.displayHighScore);
+		simon.displayHighScore = easelJsUtils.createText("HighScore : " + simon.highScore, "18px Impact", 100, 50, {
 			color: '#00ff00',
-			textAlign: 'right'
+			textAlign: 'left'
+		});
+
+		// Affichage du nombre de slaps
+		this.stage.removeChild(simon.slapNb);
+		simon.slapNb = easelJsUtils.createText("Slap count : " + Math.round(simon.slapCount), "18px Impact", 100, 70, {
+			color: '#00ff00',
+			textAlign: 'left'
 		});
 
 	};
 
 
 	// Ajout des images	     
-	this.addBitmaps = function() {
+	this.addBitmaps = function()
+	{
 		
 		// Unicorn World
 		if (simon.level % 4 == 1) {
@@ -146,68 +209,95 @@
 			});
 		}
 
-		// Créé la tête de Simon
-		var simonHead = easelJsUtils.createSimon(simon.simonX, simon.simonY, {
-			scale: [0.5, 0.5]
-		});
-
-		// Ecran de Game Over
+		// Game Over World
 		if (simon.level == 0) {
 			var gameOver = easelJsUtils.gameOver(0, 0, {
 				scale: [0.9, 1.2]
 			});
 		}
+	
 	};
 
-	// Ajout de la barre de combo
+
+	// Créé la tête de Simon
+	this.addSimon = function() {
+		this.stage.removeChild(simon.head);
+		simon.head = easelJsUtils.createSimon(simon.simonX, simon.simonY, {
+			scale: [0.5, 0.5]
+		});
+	};
+
+	// Créé la tête de Simon cassée
+	this.addSimonCasseD = function() {
+		this.stage.removeChild(simon.head);
+		simon.head = easelJsUtils.createSimonD(simon.simonX, simon.simonY, {
+			scale: [0.5, 0.5]
+		});
+	};
+
+	// Màj de l'état visuel de la barre de pv
 	this.addJauge = function() {
-		var jauge = easelJsUtils.createJauge(820-simon.force,850,simon.force,50);
+		// Background barre de vie
+		this.stage.removeChild(simon.jauge);
+		simon.jauge = easelJsUtils.createJauge(800-simon.force,850,simon.force,50);
 	};
 
+	// Barre de vie
 	this.addCombo = function() {
-		var combo = easelJsUtils.afficherCombo(400, 850, {scale: [2,2]});
-	}
+		this.stage.removeChild(simon.combo);
+		simon.combo = easelJsUtils.afficherCombo(298, 850, {scale: [2.4,2.2]});
+	};
 
 
 	// Permet de rafraichir le rendu en fonction du fps défini
 	this.startTicker = function(fps) {
 		createjs.Ticker.setFPS(fps);
 		createjs.Ticker.addEventListener("tick", handleTick);
+		simon.tactile = 1;
 	};
 
-		// Mise à jour du jeu à chaque ticks
-	this.handleTick = function(event) {
-			if (simon.force < 0) {
-				simon.level ++;
-				console.log("LEVEL UP :::::: " + simon.level);
-				simon.force = 420;
-				return init();
-			} else if (simon.force > 420) {
-				simon.force = 420;
-				simon.gameOver += 4;
-				if (simon.gameOver % 40 === 0) {
-					console.log("Attention ...");
-				}
-			} else {
-				simon.force +=2;
+	// Mise à jour du jeu à chaque ticks
+	this.handleTick = function(event)
+	{
+
+		// Gestion des niveaux
+		// LEVEL UP
+		if (simon.force < 0) {
+			simon.level ++;
+			console.log("Level" + simon.level);
+			simon.force = simon.pvMax;
+			simon.gameOver = 0;
+			init();
+		} else if (simon.force > simon.pvMax) {
+				
+			// [NOMBRE DE PV DE SIMON]
+			simon.force = simon.pvMax;
+			// Incrément de la jauge de Game Over
+			simon.gameOver += 4;
+		} else {
+			// Incrément de simon.force
+			// [VITESSE DE REGEN DE SIMON]
+			simon.force +=1;
+		}
+		// Gestion du Game Over
+		// [VITESSE DU GAMEOVER]
+		if (simon.gameOver > 140) {
+			if (simon.score !== 0) {
+				console.log("Le score obtenu est de : " + simon.score);
 			}
 
-			if (simon.gameOver > 140) {
-				console.log("Le score obtenu est de : " + simon.highScore);
-				simon.highScore = 0;
-				simon.level = 0;
-				simon.gameOver = 0;
-				addBitmaps();
-				addText();
-			}
+			// Reset des données de partie courante
+			simon.score = 0;
+			simon.level = 0;
+			simon.gameOver = 0;
+			addBitmaps();
+			addText();
+		}
 
-			addJauge();
-			this.stage.update(event);
+		addJauge();
+		this.stage.update(event);
+
 	};
-
-
-
-	
 
 
 }());
